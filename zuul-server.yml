@@ -1,0 +1,31 @@
+server:
+  port: 8080
+
+zuul:
+  ignoredServices: '*'
+  host:
+    connect-timeout-millis: 20000
+    socket-timeout-millis: 20000
+  routes:
+    security:
+      path: /login
+      url: http://localhost:8099
+    mediapp-consults:
+      path: /consults
+      url: http://localhost:8090
+    mediapp-exams:
+      path: /exams
+      url: http://localhost:8091
+    mediapp-medics:
+      path: /medics
+      url: http://localhost:8092
+      stripPrefix: false
+      filters:
+        pre:
+          preDecorationFilter:
+            enabled: true
+        customFilter:
+          com.tlaxcala.microservices.gateway.Prefilter:
+            pre: true
+            route: true
+            post: true
